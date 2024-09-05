@@ -13,6 +13,8 @@ import { Button } from "./ui/button";
 
 export default function FileDrop() {
   const { toast } = useToast();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [files, setFiles] = useState<Array<any>>([]);
   const [hover, setHover] = useState<boolean>(false);
   const accepted_files = {
@@ -32,6 +34,7 @@ export default function FileDrop() {
     "audio/*": [],
     "video/*": [],
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fileSubmitHandler = (uploadedFiles: Array<any>): void => {
     setFiles(uploadedFiles);
   };
