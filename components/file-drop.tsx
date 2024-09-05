@@ -3,10 +3,17 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 import { Upload, UploadCloud } from "lucide-react";
+import { Card, CardContent } from "./ui/card";
+
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { compressFilename } from "@/utils/compress-name";
+import bytesToSize from "@/utils/bytesTosize";
+import { FileIcon } from "@/utils/fileIcon";
+import { Button } from "./ui/button";
 
 export default function FileDrop() {
   const { toast } = useToast();
-  const [files, setFiles] = useState<Array<File>>([]);
+  const [files, setFiles] = useState<Array<any>>([]);
   const [hover, setHover] = useState<boolean>(false);
   const accepted_files = {
     "image/*": [
@@ -25,7 +32,7 @@ export default function FileDrop() {
     "audio/*": [],
     "video/*": [],
   };
-  const fileSubmitHandler = (uploadedFiles: Array<File>): void => {
+  const fileSubmitHandler = (uploadedFiles: Array<any>): void => {
     setFiles(uploadedFiles);
   };
   const dragHoverHandler = (): void => {
@@ -54,10 +61,26 @@ export default function FileDrop() {
   };
 
   return files.length ? (
-    <div className="w-full  flex-col bg-slate-300  dark:bg-background mt-10 p-10 rounded-3xl shadow-sm border-secondary border-2 border-dashed cursor-pointer flex items-center justify-center">
-      {files.map((p, index) => (
-        <div key={index}>{p.name}</div>
-      ))}
+    <div className="w-full  flex-col bg-slate-300  dark:bg-background mt-10 p-10 rounded-3xl shadow-sm border-secondary border-2 border-dashed flex ">
+      <ScrollArea>
+        {files.map((p, index) => (
+          <div key={index} className="w-full ">
+            <Card className=" w-full p-2 m-2 dark:bg-slate-900">
+              <CardContent>
+                <div className="flex ">
+                  <FileIcon file_type={p.type} />
+                  <span className="ml-2">{compressFilename(p.name)}</span>
+                  <span className="ml-2">{p.file_type}</span>
+                  <span className="ml-2">({bytesToSize(p.size)})</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        ))}
+        <div className="flex justify-end">
+          <Button>CONVERT</Button>
+        </div>
+      </ScrollArea>
     </div>
   ) : (
     <Dropzone
